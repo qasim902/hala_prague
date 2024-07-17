@@ -1,6 +1,6 @@
 // const express = require('express');
 // const { ParseServer } = require('parse-server');
-const config = require('./config/parse-config.json');
+const config = require("./config/parse-config.json");
 //
 // const app = express();
 //
@@ -22,25 +22,19 @@ const config = require('./config/parse-config.json');
 //     console.log(`Parse Server running on http://localhost:${PORT}/parse`);
 // });
 
+const express = require("express");
+const ParseServer = require("parse-server").ParseServer;
 
-const express = require('express');
-const ParseServer = require('parse-server').ParseServer;
-
-
-console.log(config)
+console.log(config);
 
 const app = express();
 const api = new ParseServer(config);
 api.start();
 
-
-
 // Serve the Parse API at /parse URL prefix
-app.use('/parse', api.app);
-
-
+app.use("/parse", api.app);
 
 const port = 1337;
 app.listen(port, function() {
-    console.log('parse-server-example running on port ' + port + '.');
+  console.log("parse-server-example running on port " + port + ".");
 });
