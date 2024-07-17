@@ -1,0 +1,15 @@
+apps:
+  - script: /Users/anshad/.nvm/versions/node/v20.14.0/bin/parse-server
+    name: pragenow
+    cwd: /Users/anshad/Desktop/personal/Personal/Hala/source code/old/wetransfer_backend_code_2024-06-12_1600/pragenow
+    args: config/parse-config.json
+    env:
+      PARSE_SERVER_MOUNT_PATH: /parse
+      PARSE_SERVER_SERVER_URL: "http://localhost:1337/parse"
+      PORT: 1337
+      VERBOSE: 1
+    watch: true
+    ignore_watch:
+      - logs
+      - /Users/anshad/Desktop/personal/Personal/Hala/source code/old/wetransfer_backend_code_2024-06-12_1600/pragenow/logs/
+    merge_logs: true
