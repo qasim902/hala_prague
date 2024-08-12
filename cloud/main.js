@@ -684,7 +684,7 @@ Parse.Cloud.define("login", async (request) => {
 
       await transporter.sendMail({
         from: '"Hala Prague', // sender address
-        to: "khakiu.uk@gmail.com", // list of receivers
+        to: "mutaz.basha@gmail.com", // list of receivers
         subject: "OTP Verification", // Subject line
         html: `<!DOCTYPE html><html><head><title>Verification Code</title></head><body><p>Dear Admin,</p><p>Your one-time verification code is: <strong>${otp}</strong></p><p>Please enter this code in the verification field to login to your account.</p><p>This otp will expire in 3 minutes. If you did not request this code, please ignore this email.</p><p>Thank you,</p></body></html>`,
       });
