@@ -26,6 +26,7 @@ Parse.Cloud.define("getAppData", async (request) => {
       switch (category.childrenType) {
         case "subCategories": {
           category.subCategories = [];
+          subCategories = subCategories.sort((a, b) => a.sortOrder - b.sortOrder);
           for (let subId of category.children) {
             let subCategory = getItemById(subCategories, subId);
             if (subCategory) {
@@ -72,6 +73,8 @@ Parse.Cloud.define("getAppData", async (request) => {
     //packing Categories into their sections
     for (let section of sections) {
       section.categories = [];
+      // sorting categories by their sortOrder
+      categories = categories.sort((a, b) => a.sortOrder - b.sortOrder);
       for (let category of categories)
         if (category.section.objectId == section.objectId)
           section.categories.push(category);
@@ -108,6 +111,7 @@ Parse.Cloud.define("getAppData", async (request) => {
     for (let staticPage of staticPagesRes) {
       staticPages[staticPage.name] = staticPage;
     }
+
     return { sections, plannedTrips, embassies, contacts, staticPages };
   } catch (error) {
     throw "Log response: " + error;
@@ -122,10 +126,12 @@ function getItemById(list, id) {
 Parse.Cloud.define("dashboard", async (request) => {
   try {
     let query = new Parse.Query("Categories");
+    query.ascending("sortOrder");
 
     query.limit(99999999);
     let categories = await query.find();
     query = new Parse.Query("SubCategory");
+    query.ascending("sortOrder");
     query.limit(99999999);
     let subCategories = await query.find();
     query = new Parse.Query("SectionsItem");
@@ -144,7 +150,7 @@ Parse.Cloud.define("dashboard", async (request) => {
     query.limit(99999999);
     let staticPages = await query.find();
     query = new Parse.Query("Sections");
-
+    query.ascending("sortOrder");
     query.limit(99999999);
     let sections = await query.find();
 
@@ -191,6 +197,26 @@ Parse.Cloud.define("subcategory", async (request) => {
     category.set("children", categoryClone.children);
     await category.save();
     return newSubCategory;
+  } catch (error) {
+    throw "Log response: " + error;
+  }
+});
+
+// update subcategory sort order
+Parse.Cloud.define("updateSubCategorySortOrder", async (request) => {
+  let subCategories = request.params;
+  subCategories = Object.values(subCategories);
+
+  try {
+    const subCategoriesTable = Parse.Object.extend("SubCategory");
+    const query = new Parse.Query(subCategoriesTable);
+    for (let subCategory of subCategories) {
+      const subCategoryObject = await query.get(subCategory.objectId);
+      subCategoryObject.set("sortOrder", subCategory.sortOrder);
+      await subCategoryObject.save();
+    }
+
+    return true;
   } catch (error) {
     throw "Log response: " + error;
   }
@@ -509,6 +535,28 @@ Parse.Cloud.define("deleteSubCategory", async (request) => {
     throw "Log response: " + error;
   }
 });
+
+// update category sort order
+//
+Parse.Cloud.define("updateCategorySortOrder", async (request) => {
+  let categories = request.params;
+  categories = Object.values(categories);
+
+  try {
+    const categoriesTable = Parse.Object.extend("Categories");
+    const query = new Parse.Query(categoriesTable);
+    for (let category of categories) {
+      const categoryObject = await query.get(category.objectId);
+      categoryObject.set("sortOrder", category.sortOrder);
+      await categoryObject.save();
+    }
+
+    return true;
+  } catch (error) {
+    throw "Log response: " + error;
+  }
+});
+
 Parse.Cloud.define("sectionItem", async (request) => {
   let {
     sectionItem,
