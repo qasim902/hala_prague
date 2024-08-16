@@ -26,7 +26,9 @@ Parse.Cloud.define("getAppData", async (request) => {
       switch (category.childrenType) {
         case "subCategories": {
           category.subCategories = [];
-          subCategories = subCategories.sort((a, b) => a.sortOrder - b.sortOrder);
+          subCategories = subCategories.sort(
+            (a, b) => a.sortOrder - b.sortOrder
+          );
           for (let subId of category.children) {
             let subCategory = getItemById(subCategories, subId);
             if (subCategory) {
@@ -577,6 +579,7 @@ Parse.Cloud.define("sectionItem", async (request) => {
     sectionItem.set("phone", data.phone);
     sectionItem.set("label", data.label);
     sectionItem.set("image", data.image);
+    if (data.images.length > 0) sectionItem.set("images", data.images);
     sectionItem.set("website", data.website);
     sectionItem.set("RichDescription", data.RichDescription);
 
@@ -817,6 +820,28 @@ Parse.Cloud.define("currency", async (request) => {
     let url = generateFixerUrl(request.params, fixerKey);
     let response = await httpRequest(url);
     return JSON.parse(response);
+  } catch (error) {
+    throw "Log response: " + error;
+  }
+});
+
+// delete logged user
+Parse.Cloud.define("deleteUser", async (request) => {
+  try {
+    const { userId } = request.params;
+
+    // Retrieve the user by ID
+    const query = new Parse.Query(Parse.User);
+    const user = await query.get(userId);
+
+    if (user) {
+      // Use the destroy method to delete the user
+      await user.destroy({ useMasterKey: true });
+
+      return { message: "User deleted successfully" };
+    } else {
+      return { message: "User not found" };
+    }
   } catch (error) {
     throw "Log response: " + error;
   }
