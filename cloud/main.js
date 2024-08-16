@@ -14,12 +14,15 @@ const transporter = nodemailer.createTransport({
 Parse.Cloud.define("getAppData", async (request) => {
   try {
     let query = new Parse.Query("Categories");
+    query.ascending("sortOrder");
     query.limit(99999999);
     let categories = parseResponse(await query.find());
     query = new Parse.Query("SubCategory");
+    query.ascending("sortOrder");
     query.limit(99999999);
     let subCategories = parseResponse(await query.find());
     query = new Parse.Query("SectionsItem");
+    query.ascending("sortOrder");
     query.limit(99999999);
     let sectionItems = parseResponse(await query.find());
     for (let category of categories) {
@@ -53,6 +56,7 @@ Parse.Cloud.define("getAppData", async (request) => {
         }
         case "sectionItems": {
           category.sectionItems = [];
+          let sortedSections = [];
           for (let itemId of category.children) {
             let sectionItem = getItemById(sectionItems, itemId);
             if (sectionItem) {
@@ -62,9 +66,12 @@ Parse.Cloud.define("getAppData", async (request) => {
                 DetailsPageType: category.DetailsPageType,
                 PageDisplayType: category.PageDisplayType,
               };
-              category.sectionItems.push(sectionItem);
+              sortedSections.push(sectionItem);
             }
           }
+          category.sectionItems.push(
+            sortedSections.sort((a, b) => a.sortOrder - b.sortOrder)
+          );
           break;
         }
       }
@@ -72,6 +79,7 @@ Parse.Cloud.define("getAppData", async (request) => {
     query = new Parse.Query("Sections");
     query.limit(99999999);
     sections = parseResponse(await query.find());
+    sections = sections.sort((a, b) => a.sortOrder - b.sortOrder);
     //packing Categories into their sections
     for (let section of sections) {
       section.categories = [];
@@ -607,6 +615,27 @@ Parse.Cloud.define("sectionItem", async (request) => {
     throw "Log response: " + error;
   }
 });
+
+// update section item sort order
+Parse.Cloud.define("updateSectionItemOrder", async (request) => {
+  let sectionItems = request.params;
+  sectionItems = Object.values(sectionItems);
+
+  try {
+    const sectionItemsTable = Parse.Object.extend("SectionsItem");
+    const query = new Parse.Query(sectionItemsTable);
+    for (let sectionItem of sectionItems) {
+      const sectionItemObject = await query.get(sectionItem.objectId);
+      sectionItemObject.set("sortOrder", sectionItem.sortOrder);
+      await sectionItemObject.save();
+    }
+
+    return true;
+  } catch (error) {
+    throw "Log response: " + error;
+  }
+});
+
 Parse.Cloud.define("requestQuotation", async (request) => {
   try {
     let { plannedTripId, email } = request.params;
