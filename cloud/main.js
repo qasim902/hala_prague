@@ -25,10 +25,6 @@ Parse.Cloud.define("getAppData", async (request) => {
     query.ascending("sortOrder");
     query.limit(99999999);
     let sectionItems = parseResponse(await query.find());
-    // hacky code
-    let tempsectionsData = JSON.stringify(sectionItems);
-    tempsectionsData.replaceAll('localhost:1337','63.176.0.204:1337');
-    sectionItems = JSON.parse(tempsectionsData);
     for (let category of categories) {
       switch (category.childrenType) {
         case "subCategories": {
@@ -82,7 +78,7 @@ Parse.Cloud.define("getAppData", async (request) => {
     }
     query = new Parse.Query("Sections");
     query.limit(99999999);
-    sections = parseResponse(await query.find());
+    let sections = parseResponse(await query.find());
     sections = sections.sort((a, b) => a.sortOrder - b.sortOrder);
     //packing Categories into their sections
     for (let section of sections) {
@@ -125,6 +121,11 @@ Parse.Cloud.define("getAppData", async (request) => {
     for (let staticPage of staticPagesRes) {
       staticPages[staticPage.name] = staticPage;
     }
+
+    // hacky code
+    let tempsectionsData = JSON.stringify(sections);
+    tempsectionsData.replaceAll('localhost:1337','63.176.0.204:1337');
+    sections = JSON.parse(tempsectionsData);
 
     return { sections, plannedTrips, embassies, contacts, staticPages };
   } catch (error) {
