@@ -123,9 +123,25 @@ Parse.Cloud.define("getAppData", async (request) => {
     }
 
     // hacky code
-    let tempsectionsData = JSON.stringify(sections);
-    tempsectionsData.replaceAll('localhost:1337','63.176.0.204:1337');
-    sections = JSON.parse(tempsectionsData);
+    // let tempsectionsData = JSON.stringify(sections);
+    // tempsectionsData = tempsectionsData.replaceAll('localhost:1337','63.176.0.204:1337');
+    // // console.log(tempsectionsData);
+    // sections = JSON.parse(tempsectionsData);
+
+    // Function to replace localhost URLs with server IP
+    function adjustFileUrl(obj) {
+      for (let key in obj) {
+        if (typeof obj[key] === "object" && obj[key] !== null) {
+          adjustFileUrl(obj[key]);
+        } else if (typeof obj[key] === "string") {
+          obj[key] = obj[key].replace("localhost:1337", "63.176.0.204:1337");
+        }
+      }
+    }
+
+    // Apply the URL adjustment to the sections object
+    adjustFileUrl(sections);
+
 
     return { sections, plannedTrips, embassies, contacts, staticPages };
   } catch (error) {
