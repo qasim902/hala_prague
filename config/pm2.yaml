@@ -5,7 +5,7 @@ apps:
     args: config/parse-config.json
     env:
       PARSE_SERVER_MOUNT_PATH: /parse
-      PARSE_SERVER_SERVER_URL: "http://localhost:1337/parse"
+      PARSE_SERVER_SERVER_URL: "http://63.176.0.204:1337/parse"
       PORT: 1337
       VERBOSE: 1
     watch: true

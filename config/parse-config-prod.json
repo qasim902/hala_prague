@@ -3,6 +3,7 @@
   "allowClientClassCreation": true,
   "databaseURI": "mongodb://admin:!admin%40123@63.176.0.204:27017/5db9ac6d13e31d005e29691a-pragenow?authSource=admin",
   "serverURL": "http://63.176.0.204:1337/parse",
+  "publicServerURL": "http://63.176.0.204:1337/parse",
   "appId": "pragenow",
   "masterKey": "MASTER-30c0bff7b37fcd871e2bec3aeb685852e2f8d1d683a97d6d9a0c1de7fba2cb8e",
   "mountPath": "/pragenow",
