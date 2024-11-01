@@ -25,6 +25,10 @@ Parse.Cloud.define("getAppData", async (request) => {
     query.ascending("sortOrder");
     query.limit(99999999);
     let sectionItems = parseResponse(await query.find());
+    // hacky code
+    let tempsectionsData = JSON.stringify(sectionItems);
+    tempsectionsData.replaceAll('localhost:1337','63.176.0.204:1337');
+    sectionItems = JSON.parse(tempsectionsData);
     for (let category of categories) {
       switch (category.childrenType) {
         case "subCategories": {
