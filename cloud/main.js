@@ -897,6 +897,54 @@ Parse.Cloud.define("deleteUser", async (request) => {
   }
 });
 
+
+// Login user
+Parse.Cloud.define("login", async (request) => {
+  const { username, password } = request.params;
+
+  try {
+    // Attempt to log in with username and password
+    const user = await Parse.User.logIn(username, password);
+
+    return { message: "Login successful", user: user.toJSON() };
+  } catch (error) {
+    throw new Parse.Error(401, "Invalid username or password.");
+  }
+});
+
+
+// Register a new user
+Parse.Cloud.define("register", async (request) => {
+  const { name, email, password, username } = request.params;
+
+  // Check if the user already exists
+  const userQuery = new Parse.Query(Parse.User);
+  userQuery.equalTo("username", username);
+  const existingUser = await userQuery.first({ useMasterKey: true });
+
+  if (existingUser) {
+    throw new Parse.Error(400, "Username already exists.");
+  }
+
+  // Create a new user
+  const user = new Parse.User();
+  user.set("username", username);
+  user.set("password", password);
+  user.set("email", email);
+  user.set("name", name); // Optional, custom field
+
+  try {
+    await user.signUp(null, { useMasterKey: true });
+    return { message: "User registered successfully", user: user.toJSON() };
+  } catch (error) {
+    throw new Parse.Error(500, "Failed to register user: " + error.message);
+  }
+});
+
+
+
+
+
 //helper functions
 function parseResponse(response) {
   return JSON.parse(JSON.stringify(response));
