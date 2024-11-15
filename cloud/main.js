@@ -841,10 +841,7 @@ Parse.Cloud.define("verifyOtp", async (request) => {
 Parse.Cloud.define("prayerTimes", async (request) => {
   try {
     let url = generatePrayerTimeUrl();
-    console.log("API Response:", url);
     let response = await httpRequest(url);
-    console.log("API Response:", response);
-
     response = JSON.parse(response);
     let prayers = response.data.timings;
     delete prayers.Sunset;
@@ -852,7 +849,6 @@ Parse.Cloud.define("prayerTimes", async (request) => {
     delete prayers.Midnight;
     return prayers;
   } catch (error) {
-    console.error("Error in prayerTimes function:", error);
     throw "Log response: " + error;
   }
 });
@@ -903,7 +899,7 @@ Parse.Cloud.define("deleteUser", async (request) => {
 
 
 // Login user with email and password
-Parse.Cloud.define("login", async (request) => {
+Parse.Cloud.define("user-login", async (request) => {
   const { email, password } = request.params;
 
   // Find user by email to get the username
@@ -1001,7 +997,21 @@ function generateWeatherstackUrl(params, key) {
 }
 
 function generatePrayerTimeUrl() {
-  let url = "http://api.aladhan.com/v1/timingsByCity?method=8";
+  const baseUrl = "http://api.aladhan.com/v1/timingsByCity";
+  const method = "8"; // Default method
+
+  // Get the current date
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+  const day = String(now.getDate()).padStart(2, '0');
+
+  // Construct the date for the route
+  const date = `${day}-${month}-${year}`;
+
+  // Construct the full URL
+  let url = `${baseUrl}/${date}?method=${method}&city=prague&country=Czech`;
+
   let city = "prague"; //default
   let country = "Czech"; //default
   url += "&city=" + city;
