@@ -352,18 +352,27 @@ Parse.Cloud.define("customTrip", async (request) => {
     let parseConfig = await Parse.Config.get();
 
     let adminEmail = parseConfig.attributes.email;
-    let apiKey = parseConfig.attributes.apiKey;
-    let projectId = parseConfig.attributes.projectId;
-    let res = await sendEmail(
-      projectId,
-      apiKey,
-      body.replace("{days}", templateDays.join(``)),
-      [{ userID: "12321", email: adminEmail }],
-      {},
-      "Stripe-subscriptionrenewal",
-      "Custom Trip",
-      "HTML"
-    );
+    // let apiKey = parseConfig.attributes.apiKey;
+    // let projectId = parseConfig.attributes.projectId;
+
+    await transporter.sendMail({
+      from: '"Hala Prague', // sender address
+      to: adminEmail, // list of receivers
+      subject: "Custom Trip", // Subject line
+      html: body.replace("{days}", templateDays.join(``)),
+    });
+
+
+    // let res = await sendEmail(
+    //   projectId,
+    //   apiKey,
+    //   body.replace("{days}", templateDays.join(``)),
+    //   [{ userID: "12321", email: adminEmail }],
+    //   {},
+    //   "Stripe-subscriptionrenewal",
+    //   "Custom Trip",
+    //   "HTML"
+    // );
     return trip;
   } catch (error) {
     throw "Log response: " + error;
@@ -441,18 +450,28 @@ Parse.Cloud.define("planForMe", async (request) => {
     //todo : replace email sending code with another email sending vendor code
     let parseConfig = await Parse.Config.get();
     let adminEmail = parseConfig.attributes.email;
-    let apiKey = parseConfig.attributes.apiKey;
-    let projectId = parseConfig.attributes.projectId;
-    let res = await sendEmail(
-      projectId,
-      apiKey,
-      body,
-      [{ userID: "12321", email: adminEmail }],
-      {},
-      "Stripe-subscriptionrenewal",
-      "Plan For Me Request",
-      "HTML"
-    );
+    // let apiKey = parseConfig.attributes.apiKey;
+    // let projectId = parseConfig.attributes.projectId;
+
+    await transporter.sendMail({
+      from: '"Hala Prague', // sender address
+      to: adminEmail, // list of receivers
+      subject: "Plan For Me Request", // Subject line
+      html: body,
+    });
+
+
+
+    // let res = await sendEmail(
+    //   projectId,
+    //   apiKey,
+    //   body,
+    //   [{ userID: "12321", email: adminEmail }],
+    //   {},
+    //   "Stripe-subscriptionrenewal",
+    //   "Plan For Me Request",
+    //   "HTML"
+    // );
   } catch (error) {
     throw "Log response: " + error;
   }
@@ -672,20 +691,27 @@ Parse.Cloud.define("requestQuotation", async (request) => {
     let body = `User Email: ${email} <br> Trip Name: ${trip.label.en}`;
     let parseConfig = await Parse.Config.get();
     let adminEmail = parseConfig.attributes.email;
-    let apiKey = parseConfig.attributes.apiKey;
-    let projectId = parseConfig.attributes.projectId;
+    // let apiKey = parseConfig.attributes.apiKey;
+    // let projectId = parseConfig.attributes.projectId;
 
-    //todo : replace email sending code with another email sending vendor code
-    let res = await sendEmail(
-      projectId,
-      apiKey,
-      body,
-      [{ userID: "12321", email: adminEmail }],
-      {},
-      "Stripe-subscriptionrenewal",
-      "Requesting Quotation",
-      "HTML"
-    );
+    await transporter.sendMail({
+      from: '"Hala Prague', // sender address
+      to: adminEmail, // list of receivers
+      subject: "Requesting Quotationt", // Subject line
+      html: body,
+    });
+
+    // //todo : replace email sending code with another email sending vendor code
+    // let res = await sendEmail(
+    //   projectId,
+    //   apiKey,
+    //   body,
+    //   [{ userID: "12321", email: adminEmail }],
+    //   {},
+    //   "Stripe-subscriptionrenewal",
+    //   "Requesting Quotation",
+    //   "HTML"
+    // );
     return true;
   } catch (error) {
     throw "Log response: " + error;
@@ -700,23 +726,47 @@ Parse.Cloud.define("feedback", async (request) => {
     feedback.set("msg", msg);
     await feedback.save();
 
-    let body = `User Email: ${email} <br> Phone: ${phone} <hr> MSG: <br>
-${msg}`;
+    // Prepare email body
+    let body = `
+  <p>User Email: ${email}</p>
+  <p>Phone: ${phone}</p>
+  <hr>
+  <p>Message:</p>
+  <p>${msg}</p>
+`;
+
+
     let parseConfig = await Parse.Config.get();
     let adminEmail = parseConfig.attributes.email;
-    let apiKey = parseConfig.attributes.apiKey;
-    let projectId = parseConfig.attributes.projectId;
-    //todo : replace email sending code with another email sending vendor code
-    let res = await sendEmail(
-      projectId,
-      apiKey,
-      body,
-      [{ userID: "12321", email: adminEmail }],
-      {},
-      "Stripe-subscriptionrenewal",
-      "Customer FeedBack",
-      "HTML"
-    );
+
+    if (!adminEmail) {
+      throw new Error("Admin email is not configured in Parse Config.");
+    }
+
+
+    // let apiKey = parseConfig.attributes.apiKey;
+    // let projectId = parseConfig.attributes.projectId;
+
+    await transporter.sendMail({
+      from: '"Hala Prague', // sender address
+      to: adminEmail, // list of receivers
+      subject: "Customer FeedBack", // Subject line
+      html: body,
+    });
+
+
+
+  //  todo : replace email sending code with another email sending vendor code
+    // let res = await sendEmail(
+    //   projectId,
+    //   apiKey,
+    //   body,
+    //   [{ userID: "12321", email: adminEmail }],
+    //   {},
+    //   "Stripe-subscriptionrenewal",
+    //   "Customer FeedBack",
+    //   "HTML"
+    // );
     return true;
   } catch (error) {
     throw "Log response: " + error;
