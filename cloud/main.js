@@ -897,6 +897,9 @@ Parse.Cloud.define("prayerTimes", async (request) => {
     delete prayers.Sunset;
     delete prayers.Imsak;
     delete prayers.Midnight;
+    delete prayers.Sunrise;
+    delete prayers.Firstthird;
+    delete prayers.Lastthird;
     return prayers;
   } catch (error) {
     throw "Log response: " + error;
