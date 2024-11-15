@@ -841,7 +841,10 @@ Parse.Cloud.define("verifyOtp", async (request) => {
 Parse.Cloud.define("prayerTimes", async (request) => {
   try {
     let url = generatePrayerTimeUrl();
+    console.log("API Response:", url);
     let response = await httpRequest(url);
+    console.log("API Response:", response);
+
     response = JSON.parse(response);
     let prayers = response.data.timings;
     delete prayers.Sunset;
@@ -849,6 +852,7 @@ Parse.Cloud.define("prayerTimes", async (request) => {
     delete prayers.Midnight;
     return prayers;
   } catch (error) {
+    console.error("Error in prayerTimes function:", error);
     throw "Log response: " + error;
   }
 });
