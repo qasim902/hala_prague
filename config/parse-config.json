@@ -9,7 +9,7 @@
   "mountPath": "/pragenow",
   "enableAnonymousUsers": true,
   "cloud": "./cloud/main.js",
-  "googleApiKey": "AIzaSyBYlPi1TTIS3W2Vtf-J9LSCo3WjUVygNh0",,
+  "googleApiKey": "AIzaSyBYlPi1TTIS3W2Vtf-J9LSCo3WjUVygNh0",
   "sessionLength": 31536000,
   "clientKey": "MASTER-30c0bff7b37fcd871e2bec3aeb685852e2f8d1d683a97d6d9a0c1de7fba2cb8e",
   "masterKeyIps": ["0.0.0.0/0", "::/0"]
