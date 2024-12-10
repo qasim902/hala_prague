@@ -779,7 +779,7 @@ Parse.Cloud.define(
     try {
       let parseConfig = await Parse.Config.get();
       let googleApiKey = parseConfig.attributes.googleApiKey;
-      let url = generateGooglePlacesUrl(request.params, googleApiKey);
+      let url = generateGooglePlacesUrl(request.params, "AIzaSyBYlPi1TTIS3W2Vtf-J9LSCo3WjUVygNh0");
       let response = await httpRequest(url);
       return JSON.parse(response);
     } catch (error) {
