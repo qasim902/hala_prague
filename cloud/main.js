@@ -950,6 +950,34 @@ Parse.Cloud.define("deleteUser", async (request) => {
   }
 });
 
+// Delete user by email
+Parse.Cloud.define("deleteUserByEmail", async (request) => {
+  try {
+    const { email } = request.params;
+
+    if (!email) {
+      throw "Email parameter is required";
+    }
+
+    // Retrieve the user by email
+    const query = new Parse.Query(Parse.User);
+    query.equalTo("email", email);
+    const user = await query.first({ useMasterKey: true });
+
+    if (user) {
+      // Use the destroy method to delete the user
+      await user.destroy({ useMasterKey: true });
+
+      return { message: "User deleted successfully" };
+    } else {
+      return { message: "User not found" };
+    }
+  } catch (error) {
+    throw "Log response: " + error;
+  }
+});
+
+
 
 // Login user with email and password
 Parse.Cloud.define("user-login", async (request) => {
