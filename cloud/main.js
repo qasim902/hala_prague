@@ -205,6 +205,28 @@ Parse.Cloud.define("dashboard", async (request) => {
   }
 });
 
+Parse.Cloud.beforeSave("Categories", async (request) => {
+  const { object } = request;
+
+  // Sanitize the incoming data
+  if (object.has("className")) {
+    object.unset("className"); // Remove the className field
+  }
+
+  // Additional sanitization or validation
+  if (!object.has("name")) {
+    throw new Parse.Error(400, "The 'name' field is required.");
+  }
+
+  // Example: Enforcing specific formatting for a field
+  const searchKeyword = object.get("searchKeyword");
+  if (searchKeyword) {
+    object.set("searchKeyword", searchKeyword.trim().toUpperCase());
+  }
+
+  // Allow the save to proceed
+});
+
 Parse.Cloud.define("subcategory", async (request) => {
   try {
     let data = request.params.subCategory;
