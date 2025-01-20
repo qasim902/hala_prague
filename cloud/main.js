@@ -201,6 +201,8 @@ Parse.Cloud.define("dashboard", async (request) => {
 
     // Apply the URL adjustment to the sections object
     adjustFileUrl(sections);
+    adjustFileUrl(subCategories);
+    adjustFileUrl(sectionItems);
 
     return {
       categories,
