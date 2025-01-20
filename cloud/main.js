@@ -256,6 +256,11 @@ Parse.Cloud.define('deleteSectionImage', async (request) => {
     const query = new Parse.Query('Sections');
     const section = await query.get(sectionId);
 
+
+
+    return { status: 'success', message: JSON.stringify(section) };
+
+
     if (!section) {
       throw new Parse.Error(404, 'Section not found');
     }
