@@ -256,9 +256,8 @@ Parse.Cloud.define('deleteSectionImage', async (request) => {
   try {
     // Example: Logic to delete the image
     const query = new Parse.Query("Sections");
-    query.equalTo("_id", sectionId);
-    let section = await query.find();
-    section = section[0];
+    query.equalTo("objectId", sectionId);
+    const section = await query.first();
 
     // const section = await query.get(sectionId);
 
