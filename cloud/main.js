@@ -247,7 +247,7 @@ Parse.Cloud.beforeSave("Categories", async (request) => {
 Parse.Cloud.define('deleteSectionImage', async (request) => {
   const { sectionId, imageId } = request.params;
 
-  return { status: 'success', message: sectionId };
+  // return { status: 'success', message: sectionId };
 
   if (!sectionId || !imageId) {
     throw new Parse.Error(400, 'Missing parameters: sectionId and imageId are required');
@@ -255,8 +255,12 @@ Parse.Cloud.define('deleteSectionImage', async (request) => {
 
   try {
     // Example: Logic to delete the image
-    const query = new Parse.Query('Sections');
-    const section = await query.get(sectionId);
+    const query = new Parse.Query("Sections");
+    query.equalTo("_id", sectionId);
+    let section = await query.find();
+    section = section[0];
+
+    // const section = await query.get(sectionId);
 
     if (!section) {
       throw new Parse.Error(404, 'Section not found');
