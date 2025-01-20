@@ -243,6 +243,28 @@ Parse.Cloud.beforeSave("Categories", async (request) => {
 });
 
 // cloud/main.js or cloud/functions.js
+Parse.Cloud.define('testSectionQuery', async (request) => {
+  const { sectionId } = request.params;
+
+  if (!sectionId) {
+    throw new Parse.Error(400, 'Missing parameter: sectionId is required');
+  }
+
+  try {
+    const query = new Parse.Query("Sections");
+    query.equalTo("objectId", sectionId);
+    const section = await query.first();
+
+    if (!section) {
+      throw new Parse.Error(404, 'Section not found');
+    }
+
+    return { status: 'success', section: section.toJSON() };
+  } catch (error) {
+    throw new Parse.Error(500, error.message);
+  }
+});
+
 
 Parse.Cloud.define('deleteSectionImage', async (request) => {
   const { sectionId, imageId } = request.params;
