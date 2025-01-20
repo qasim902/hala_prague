@@ -243,34 +243,10 @@ Parse.Cloud.beforeSave("Categories", async (request) => {
 });
 
 // cloud/main.js or cloud/functions.js
-Parse.Cloud.define('testSectionQuery', async (request) => {
-  const { sectionId } = request.params;
-
-  if (!sectionId) {
-    throw new Parse.Error(400, 'Missing sectionId');
-  }
-
-  const query = new Parse.Query("Sections");
-  query.equalTo("_id", sectionId);
-
-  try {
-    const section = await query.first(); // Ensure this finds an existing object
-
-    if (!section) {
-      throw new Parse.Error(404, 'Section not found');
-    }
-
-    return { status: 'success', data: section };
-  } catch (error) {
-    throw new Parse.Error(500, error.message);
-  }
-});
-
 
 Parse.Cloud.define('deleteSectionImage', async (request) => {
   const { sectionId, imageId } = request.params;
 
-  // return { status: 'success', message: sectionId };
 
   if (!sectionId || !imageId) {
     throw new Parse.Error(400, 'Missing parameters: sectionId and imageId are required');
@@ -278,11 +254,8 @@ Parse.Cloud.define('deleteSectionImage', async (request) => {
 
   try {
     // Example: Logic to delete the image
-    const query = new Parse.Query("Sections");
-    query.equalTo("objectId", sectionId);
-    const section = await query.first();
-
-    // const section = await query.get(sectionId);
+    const query = new Parse.Query('SectionsItem');
+    const section = await query.get(sectionId);
 
     if (!section) {
       throw new Parse.Error(404, 'Section not found');
