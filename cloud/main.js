@@ -263,9 +263,16 @@ Parse.Cloud.define('deleteSectionImage', async (request) => {
 
     // Assuming 'images' is an array field in the 'Sections' class
     let images = section.get('images') || [];
-    images = images.filter((image) => image !== imageId);
+    // Filter out the image by matching the 'name' property
+    const filteredImages = images.filter(image => image.name !== imageId);
 
-    section.set('images', images);
+    // Check if the image was found and removed
+    if (images.length === filteredImages.length) {
+      throw new Parse.Error(404, 'Image not found');
+    }
+
+    // Save the updated images array back to the section
+    section.set('images', filteredImages);
     await section.save();
 
     return { status: 'success', message: 'Image deleted successfully' };
