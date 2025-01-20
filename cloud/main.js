@@ -134,7 +134,7 @@ Parse.Cloud.define("getAppData", async (request) => {
         if (typeof obj[key] === "object" && obj[key] !== null) {
           adjustFileUrl(obj[key]);
         } else if (typeof obj[key] === "string") {
-          obj[key] = obj[key].replace("localhost:1337", "api.planet-destinations.com");
+          obj[key] = obj[key].replace("localhost:1337", "63.176.0.204:1337");
         }
       }
     }
@@ -188,6 +188,19 @@ Parse.Cloud.define("dashboard", async (request) => {
     query = new Parse.Query("advertisementBanners");
     query.limit(99999999);
     let advertisementBanners = await query.find();
+
+    function adjustFileUrl(obj) {
+      for (let key in obj) {
+        if (typeof obj[key] === "object" && obj[key] !== null) {
+          adjustFileUrl(obj[key]);
+        } else if (typeof obj[key] === "string") {
+          obj[key] = obj[key].replace("localhost:1337", "api.planet-destinations.com");
+        }
+      }
+    }
+
+    // Apply the URL adjustment to the sections object
+    adjustFileUrl(sections);
 
     return {
       categories,
