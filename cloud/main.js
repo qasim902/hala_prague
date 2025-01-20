@@ -244,35 +244,6 @@ Parse.Cloud.beforeSave("Categories", async (request) => {
 
 // cloud/main.js or cloud/functions.js
 
-// Parse.Cloud.define('deleteSectionImage', async (request) => {
-//   const { sectionId, imageId } = request.params;
-//
-//   if (!sectionId || !imageId) {
-//     throw new Parse.Error(400, 'Missing parameters: sectionId and imageId are required');
-//   }
-//
-//   try {
-//     // Example: Logic to delete the image
-//     const query = new Parse.Query('Sections');
-//     const section = await query.get(sectionId);
-//
-//     if (!section) {
-//       throw new Parse.Error(404, 'Section not found');
-//     }
-//
-//     // Assuming 'images' is an array field in the 'Sections' class
-//     let images = section.get('images') || [];
-//     images = images.filter((image) => image !== imageId);
-//
-//     section.set('images', images);
-//     await section.save();
-//
-//     return { status: 'success', message: 'Image deleted successfully' };
-//   } catch (error) {
-//     throw new Parse.Error(500, error.message);
-//   }
-// });
-
 Parse.Cloud.define('deleteSectionImage', async (request) => {
   const { sectionId, imageId } = request.params;
 
@@ -281,15 +252,20 @@ Parse.Cloud.define('deleteSectionImage', async (request) => {
   }
 
   try {
+    // Example: Logic to delete the image
     const query = new Parse.Query('Sections');
-    query.equalTo("objectId", sectionId);
-    const section = await query.first({ useMasterKey: true });
+    const section = await query.get(sectionId);
 
     if (!section) {
       throw new Parse.Error(404, 'Section not found');
     }
 
-    // Retrieve the images array
+    // Assuming 'images' is an array field in the 'Sections' class
+    // let images = section.get('images') || [];
+    // images = images.filter((image) => image !== imageId);
+    //
+    // section.set('images', images);
+
     let images = section.get('images') || [];
 
     // Check if the image exists
@@ -304,14 +280,54 @@ Parse.Cloud.define('deleteSectionImage', async (request) => {
 
     // Update the section with the modified images array
     section.set('images', images);
-    await section.save(null, { useMasterKey: true });
+
+    await section.save();
 
     return { status: 'success', message: 'Image deleted successfully' };
   } catch (error) {
-    console.error('Error deleting image:', error);
     throw new Parse.Error(500, error.message);
   }
 });
+
+// Parse.Cloud.define('deleteSectionImage', async (request) => {
+//   const { sectionId, imageId } = request.params;
+//
+//   if (!sectionId || !imageId) {
+//     throw new Parse.Error(400, 'Missing parameters: sectionId and imageId are required');
+//   }
+//
+//   try {
+//     const query = new Parse.Query('Sections');
+//     query.equalTo("objectId", sectionId);
+//     const section = await query.first({ useMasterKey: true });
+//
+//     if (!section) {
+//       throw new Parse.Error(404, 'Section not found');
+//     }
+//
+//     // Retrieve the images array
+//     let images = section.get('images') || [];
+//
+//     // Check if the image exists
+//     const imageIndex = images.findIndex((image) => image.name === imageId);
+//
+//     if (imageIndex === -1) {
+//       throw new Parse.Error(404, 'Image not found in section');
+//     }
+//
+//     // Remove the image object by index
+//     images.splice(imageIndex, 1);
+//
+//     // Update the section with the modified images array
+//     section.set('images', images);
+//     await section.save(null, { useMasterKey: true });
+//
+//     return { status: 'success', message: 'Image deleted successfully' };
+//   } catch (error) {
+//     console.error('Error deleting image:', error);
+//     throw new Parse.Error(500, error.message);
+//   }
+// });
 
 
 
