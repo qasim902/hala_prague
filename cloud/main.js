@@ -247,19 +247,20 @@ Parse.Cloud.define('testSectionQuery', async (request) => {
   const { sectionId } = request.params;
 
   if (!sectionId) {
-    throw new Parse.Error(400, 'Missing parameter: sectionId is required');
+    throw new Parse.Error(400, 'Missing sectionId');
   }
 
+  const query = new Parse.Query("Sections");
+  query.equalTo("_id", sectionId);
+
   try {
-    const query = new Parse.Query("Sections");
-    query.equalTo("objectId", sectionId);
-    const section = await query.first();
+    const section = await query.first(); // Ensure this finds an existing object
 
     if (!section) {
       throw new Parse.Error(404, 'Section not found');
     }
 
-    return { status: 'success', section: section.toJSON() };
+    return { status: 'success', data: section };
   } catch (error) {
     throw new Parse.Error(500, error.message);
   }
