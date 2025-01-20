@@ -267,7 +267,7 @@ Parse.Cloud.define('deleteSectionImage', async (request) => {
     // return { status: 'success', message: JSON.stringify(images)};
 
     // Filter out the image by matching the 'name' property
-    const imageExists = images.some(image => image.name === imageId);
+    const imageExists = images.some(image => image.name == imageId);
     if (!imageExists) {
       throw new Parse.Error(404, 'Image not found in section');
     }
