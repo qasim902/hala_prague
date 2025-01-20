@@ -134,7 +134,7 @@ Parse.Cloud.define("getAppData", async (request) => {
         if (typeof obj[key] === "object" && obj[key] !== null) {
           adjustFileUrl(obj[key]);
         } else if (typeof obj[key] === "string") {
-          obj[key] = obj[key].replace("localhost:1337", "63.176.0.204:1337");
+          obj[key] = obj[key].replace("localhost:1337", "api.planet-destinations.com");
         }
       }
     }
