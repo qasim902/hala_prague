@@ -263,6 +263,9 @@ Parse.Cloud.define('deleteSectionImage', async (request) => {
 
     // Assuming 'images' is an array field in the 'Sections' class
     let images = section.get('images') || [];
+
+    return { status: 'success', message: JSON.stringify(images)};
+
     // Filter out the image by matching the 'name' property
     const filteredImages = images.filter(image => image.name !== imageId);
 
