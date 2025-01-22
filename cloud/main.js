@@ -268,6 +268,8 @@ Parse.Cloud.define('deleteSectionImage', async (request) => {
     console.log(images);
     // let filteredImages = images.filter(image => image.name != imageId);
     let filteredImages = images.filter((child) => {
+      console.log('child.name');
+      console.log(child.name)
       return child.name != imageId;
     });
 
