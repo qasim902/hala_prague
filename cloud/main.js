@@ -264,18 +264,11 @@ Parse.Cloud.define('deleteSectionImage', async (request) => {
     // Assuming 'images' is an array field in the 'Sections' class
     let images = section.get('images') || [];
 
-    console.log('images');
-    console.log(images);
     // let filteredImages = images.filter(image => image.name != imageId);
     let filteredImages = images.filter((child) => {
-      console.log('child.name');
-      console.log(child.name)
-      console.log(child.name())
-      return child.name != imageId;
+      return child.name() != imageId;
     });
 
-    console.log('filteredImages');
-    console.log(filteredImages);
 
     // Update the section with the new images array
     section.set('images', filteredImages);
