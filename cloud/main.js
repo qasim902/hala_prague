@@ -1056,6 +1056,7 @@ Parse.Cloud.define("deleteUserByEmail", async (request) => {
 
 Parse.Cloud.define("updateData", async (request) => {
     try {
+        console.log('here in iehbe');
         const admin = require("firebase-admin");
 
         // Ensure Firebase is initialized only once
@@ -1073,44 +1074,35 @@ Parse.Cloud.define("updateData", async (request) => {
         const serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
 
         if (!admin.apps.length) {
+            console.log('here in if');
             admin.initializeApp({
                 credential: admin.credential.cert(serviceAccount),
             });
         }
+        console.log('here in else');
 
-        const sendNotification = async () => {
-            const notificationPayload = {
-                topic: "praguenow",  // Replace with your actual topic name
-                notification: {
-                    title: "Test Title",
-                    body: "Test body"
+
+        const notificationPayload = {
+            topic: "praguenow",  // Replace with your actual topic name
+            notification: {
+                title: "Test Title",
+                body: "Test body"
+            },
+            apns: {
+                headers: {
+                    "apns-priority": "5"
                 },
-                apns: {
-                    headers: {
-                        "apns-priority": "5"
-                    },
-                    payload: {
-                        aps: {
-                            "mutable-content": 1,
-                            "op": "update"
-                        }
+                payload: {
+                    aps: {
+                        "mutable-content": 1,
+                        "op": "update"
                     }
                 }
-            };
-
-            try {
-                const response = await admin.messaging().send(notificationPayload);
-                console.log("Notification sent successfully!", response);
-                return response;
-            } catch (error) {
-                console.error("Error sending notification:", error);
-                throw new Parse.Error(500, "Notification failed to send.");
             }
         };
 
-        // Call the function and wait for it to complete
-        await sendNotification();
-
+        const response = await admin.messaging().send(notificationPayload);
+        console.log("Notification sent successfully!", response);
 
         return {
             status: "success",
