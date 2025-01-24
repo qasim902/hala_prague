@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+const admin = require("firebase-admin");
 
 const transporter = nodemailer.createTransport({
     service: "Gmail",
@@ -1053,6 +1054,74 @@ Parse.Cloud.define("deleteUserByEmail", async (request) => {
     }
 });
 
+Parse.Cloud.define("updateData", async (request) => {
+    try {
+        const admin = require("firebase-admin");
+
+        // Ensure Firebase is initialized only once
+        // if (!admin.apps.length) {
+        //
+        //     let serviceAccount = require("../service-account-file.json");
+        //     console.log(serviceAccount,'serviceAccount');
+        //     serviceAccount = JSON.parse(serviceAccount);
+        //
+        //     admin.initializeApp({
+        //         credential: admin.credential.cert(serviceAccount)
+        //     });
+        // }
+
+        const serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
+
+        if (!admin.apps.length) {
+            admin.initializeApp({
+                credential: admin.credential.cert(serviceAccount),
+            });
+        }
+
+        const sendNotification = async () => {
+            const notificationPayload = {
+                topic: "praguenow",  // Replace with your actual topic name
+                notification: {
+                    title: "Test Title",
+                    body: "Test body"
+                },
+                apns: {
+                    headers: {
+                        "apns-priority": "5"
+                    },
+                    payload: {
+                        aps: {
+                            "mutable-content": 1,
+                            "op": "update"
+                        }
+                    }
+                }
+            };
+
+            try {
+                const response = await admin.messaging().send(notificationPayload);
+                console.log("Notification sent successfully!", response);
+                return response;
+            } catch (error) {
+                console.error("Error sending notification:", error);
+                throw new Parse.Error(500, "Notification failed to send.");
+            }
+        };
+
+        // Call the function and wait for it to complete
+        await sendNotification();
+
+
+        return {
+            status: "success",
+            message: "Notification sent and login successful",
+        };
+    } catch (error) {
+        console.error("Error in update-data:", error);
+        throw new Parse.Error(401, error.message || "Invalid email or password.");
+    }
+});
+
 
 
 // Login user with email and password
@@ -1228,74 +1297,4 @@ function randomOtpGenerator() {
     return Math.floor(100000 + Math.random() * 900000);
 }
 
-Parse.Cloud.define("update-data", async (request) => {
-    try {
-        const admin = require("firebase-admin");
 
-        // Ensure Firebase is initialized only once
-        // if (!admin.apps.length) {
-        //
-        //     let serviceAccount = require("../service-account-file.json");
-        //     console.log(serviceAccount,'serviceAccount');
-        //     serviceAccount = JSON.parse(serviceAccount);
-        //
-        //     admin.initializeApp({
-        //         credential: admin.credential.cert(serviceAccount)
-        //     });
-        // }
-
-        const serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
-
-        if (!admin.apps.length) {
-            admin.initializeApp({
-                credential: admin.credential.cert(serviceAccount),
-            });
-        }
-
-        const sendNotification = async () => {
-            const notificationPayload = {
-                topic: "praguenow",  // Replace with your actual topic name
-                notification: {
-                    title: "Test Title",
-                    body: "Test body"
-                },
-                apns: {
-                    headers: {
-                        "apns-priority": "5"
-                    },
-                    payload: {
-                        aps: {
-                            "mutable-content": 1,
-                            "op": "update"
-                        }
-                    }
-                }
-            };
-
-            try {
-                const response = await admin.messaging().send(notificationPayload);
-                console.log("Notification sent successfully!", response);
-                return response;
-            } catch (error) {
-                console.error("Error sending notification:", error);
-                throw new Parse.Error(500, "Notification failed to send.");
-            }
-        };
-
-        // Call the function and wait for it to complete
-        await sendNotification();
-
-        // Assuming 'loggedInUser' logic here (replace with actual logic)
-        const loggedInUser = request.user;  // Ensure `request.user` exists
-
-        return {
-            status: "success",
-            message: "Notification sent and login successful",
-            user: loggedInUser ? loggedInUser.toJSON() : null
-        };
-
-    } catch (error) {
-        console.error("Error in update-data:", error);
-        throw new Parse.Error(401, error.message || "Invalid email or password.");
-    }
-});
