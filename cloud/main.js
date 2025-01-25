@@ -1093,7 +1093,7 @@ Parse.Cloud.define("updateData", async (request) => {
                 payload: {
                     aps: {
                         "mutable-content": 1,
-                        "op": "forceupdate"
+                        "op": "update"
                     }
                 }
             }
