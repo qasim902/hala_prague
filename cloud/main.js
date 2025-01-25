@@ -1057,28 +1057,26 @@ Parse.Cloud.define("deleteUserByEmail", async (request) => {
 Parse.Cloud.define("updateData", async (request) => {
     try {
         console.log('here in iehbe');
-        const admin = require("firebase-admin");
 
         // Ensure Firebase is initialized only once
-        // if (!admin.apps.length) {
-        //
-        //     let serviceAccount = require("../service-account-file.json");
-        //     console.log(serviceAccount,'serviceAccount');
-        //     serviceAccount = JSON.parse(serviceAccount);
-        //
-        //     admin.initializeApp({
-        //         credential: admin.credential.cert(serviceAccount)
-        //     });
-        // }
-
-        const serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
-
         if (!admin.apps.length) {
             console.log('here in if');
+
+            let serviceAccount = require("../hala-prague-firebase-admin.json");
+
             admin.initializeApp({
-                credential: admin.credential.cert(serviceAccount),
+                credential: admin.credential.cert(serviceAccount)
             });
         }
+
+        // const serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
+        //
+        // if (!admin.apps.length) {
+        //     console.log('here in if');
+        //     admin.initializeApp({
+        //         credential: admin.credential.cert(serviceAccount),
+        //     });
+        // }
         console.log('here in else');
 
 

@@ -3,3 +3,4 @@ node_modules
 logs
 .env
 service-account-file.json
+hala-prague-firebase-admin.json
