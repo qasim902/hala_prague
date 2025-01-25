@@ -1083,8 +1083,8 @@ Parse.Cloud.define("updateData", async (request) => {
         const notificationPayload = {
             topic: "praguenow",  // Replace with your actual topic name
             notification: {
-                title: "Test Title",
-                body: "Test body"
+                title: "New content for you",
+                body: "Click to view"
             },
             apns: {
                 headers: {
@@ -1093,7 +1093,7 @@ Parse.Cloud.define("updateData", async (request) => {
                 payload: {
                     aps: {
                         "mutable-content": 1,
-                        "op": "update"
+                        "op": "forceupdate"
                     }
                 }
             }
