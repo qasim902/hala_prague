@@ -1102,25 +1102,32 @@ Parse.Cloud.define("updateData", async (request) => {
 
         const notificationPayload2 = {
             topic: "praguenow",  // Replace with your actual topic name
-                apns: {
-                    headers: {
-                        "apns-priority": "5"
-                    },
-                    payload: {
-                        aps: {
-                            alert: {
-                                "title": "New content for you",
-                                "body": "Click to view"
-                            },
-                            "mutable-content": 1,
-                            "content-available": 1,
-                            "badge": 0,
-                            "sound": "default",
-                            "op": "update"
+            apns: {
+                headers: {
+                    "apns-priority": "5"
+                },
+                payload: {
+                    aps: {
+                        alert: {
+                            "title": "New content for you",
+                            "body": "Click to view"
                         },
+                        "mutable-content": 1,
+                        "content-available": 1,
+                        "badge": 0,
+                        "sound": "default",
                         "op": "update"
-                    }
+                    },
+                    "op": "update"
                 }
+            },
+            androidConfig:{
+                data:{
+                    "title": "New content for you",
+                    "body": "Click to view",
+                    "op": "update"
+                }
+            }
         };
 
         const response = await admin.messaging().send(notificationPayload2);
