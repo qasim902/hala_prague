@@ -1102,6 +1102,10 @@ Parse.Cloud.define("updateData", async (request) => {
 
         const notificationPayload2 = {
             topic: "praguenow",  // Replace with your actual topic name
+            notification: {
+                title: "New content for you",
+                body: "Click to view"
+            },
             apns: {
                 headers: {
                     "apns-priority": "5"
@@ -1122,10 +1126,19 @@ Parse.Cloud.define("updateData", async (request) => {
                 }
             },
             android:{
+                priority: "high",
+                notification: {
+                    title: "New content for you",
+                    body: "Click to view",
+                    sound: "default",
+                    priority: "high",
+                    click_action: "FLUTTER_NOTIFICATION_CLICK"
+                },
                 data:{
                     "title": "New content for you",
                     "body": "Click to view",
-                    "op": "update"
+                    "op": "update",
+                    click_action: "FLUTTER_NOTIFICATION_CLICK"
                 }
             }
         };
