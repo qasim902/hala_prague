@@ -1102,10 +1102,6 @@ Parse.Cloud.define("updateData", async (request) => {
 
         const notificationPayload2 = {
             topic: "praguenow",  // Replace with your actual topic name
-            notification: {
-                title: "New content for you",
-                body: "Click to view"
-            },
             apns: {
                 headers: {
                     "apns-priority": "5"
