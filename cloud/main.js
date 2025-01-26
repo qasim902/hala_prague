@@ -1121,7 +1121,7 @@ Parse.Cloud.define("updateData", async (request) => {
                     "op": "update"
                 }
             },
-            androidConfig:{
+            android:{
                 data:{
                     "title": "New content for you",
                     "body": "Click to view",
