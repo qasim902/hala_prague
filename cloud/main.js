@@ -428,7 +428,7 @@ Parse.Cloud.define("customTrip", async (request) => {
         //todo : replace email sending code with another email sending vendor code
         let parseConfig = await Parse.Config.get();
 
-        let adminEmail = parseConfig.attributes.email;
+        let adminEmail = process.env.ADMIN_EMAIL;
         // let apiKey = parseConfig.attributes.apiKey;
         // let projectId = parseConfig.attributes.projectId;
 
@@ -526,7 +526,7 @@ Parse.Cloud.define("planForMe", async (request) => {
         body = body.replace("{note}", trip.note);
         //todo : replace email sending code with another email sending vendor code
         let parseConfig = await Parse.Config.get();
-        let adminEmail = parseConfig.attributes.email;
+        let adminEmail = process.env.ADMIN_EMAIL;
         // let apiKey = parseConfig.attributes.apiKey;
         // let projectId = parseConfig.attributes.projectId;
 
@@ -767,7 +767,7 @@ Parse.Cloud.define("requestQuotation", async (request) => {
         trip = parseResponse(trip);
         let body = `User Email: ${email} <br> Trip Name: ${trip.label.en}`;
         let parseConfig = await Parse.Config.get();
-        let adminEmail = parseConfig.attributes.email;
+        let adminEmail = process.env.ADMIN_EMAIL;
         // let apiKey = parseConfig.attributes.apiKey;
         // let projectId = parseConfig.attributes.projectId;
 
@@ -814,7 +814,7 @@ Parse.Cloud.define("feedback", async (request) => {
 
 
         let parseConfig = await Parse.Config.get();
-        let adminEmail = parseConfig.attributes.email;
+        let adminEmail = process.env.ADMIN_EMAIL;
 
         if (!adminEmail) {
             throw new Error("Admin email is not configured in Parse Config.");
@@ -1080,26 +1080,54 @@ Parse.Cloud.define("updateData", async (request) => {
         console.log('here in else');
 
 
-        const notificationPayload = {
+        // const notificationPayload = {
+        //     topic: "praguenow",  // Replace with your actual topic name
+        //     notification: {
+        //         title: "New content for you",
+        //         body: "Click to view"
+        //     },
+        //     apns: {
+        //         headers: {
+        //             "apns-priority": "5"
+        //         },
+        //         payload: {
+        //             aps: {
+        //                 "mutable-content": 1,
+        //                 "op": "update"
+        //             }
+        //         }
+        //     }
+        // };
+
+
+        const notificationPayload2 = {
             topic: "praguenow",  // Replace with your actual topic name
-            notification: {
-                title: "New content for you",
-                body: "Click to view"
-            },
-            apns: {
-                headers: {
-                    "apns-priority": "5"
+                notification: {
+                    title: "Test Title",
+                    body: "Test body"
                 },
-                payload: {
-                    aps: {
-                        "mutable-content": 1,
+                apns: {
+                    headers: {
+                        "apns-priority": "5"
+                    },
+                    payload: {
+                        aps: {
+                            alert: {
+                                "title": "New content for you",
+                                "body": "Click to view"
+                            },
+                            "mutable-content": 1,
+                            "content-available": 1,
+                            "badge": 0,
+                            "sound": "default",
+                            "op": "update"
+                        },
                         "op": "update"
                     }
                 }
-            }
         };
 
-        const response = await admin.messaging().send(notificationPayload);
+        const response = await admin.messaging().send(notificationPayload2);
         console.log("Notification sent successfully!", response);
 
         return {
