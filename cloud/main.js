@@ -429,6 +429,7 @@ Parse.Cloud.define("customTrip", async (request) => {
         let parseConfig = await Parse.Config.get();
 
         let adminEmail = process.env.ADMIN_EMAIL;
+        console.log(adminEmail);
         // let apiKey = parseConfig.attributes.apiKey;
         // let projectId = parseConfig.attributes.projectId;
 
@@ -527,6 +528,7 @@ Parse.Cloud.define("planForMe", async (request) => {
         //todo : replace email sending code with another email sending vendor code
         let parseConfig = await Parse.Config.get();
         let adminEmail = process.env.ADMIN_EMAIL;
+        console.log(adminEmail);
         // let apiKey = parseConfig.attributes.apiKey;
         // let projectId = parseConfig.attributes.projectId;
 
@@ -768,6 +770,7 @@ Parse.Cloud.define("requestQuotation", async (request) => {
         let body = `User Email: ${email} <br> Trip Name: ${trip.label.en}`;
         let parseConfig = await Parse.Config.get();
         let adminEmail = process.env.ADMIN_EMAIL;
+        console.log(adminEmail);
         // let apiKey = parseConfig.attributes.apiKey;
         // let projectId = parseConfig.attributes.projectId;
 
@@ -819,7 +822,7 @@ Parse.Cloud.define("feedback", async (request) => {
         if (!adminEmail) {
             throw new Error("Admin email is not configured in Parse Config.");
         }
-
+        console.log(adminEmail);
 
         // let apiKey = parseConfig.attributes.apiKey;
         // let projectId = parseConfig.attributes.projectId;
