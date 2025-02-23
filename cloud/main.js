@@ -1104,6 +1104,9 @@ Parse.Cloud.define("updateData", async (request) => {
 
 
         const notificationPayload2 = {
+            message:{
+
+
             topic: "praguenow",  // Replace with your actual topic name
             apns: {
                 headers: {
@@ -1132,6 +1135,7 @@ Parse.Cloud.define("updateData", async (request) => {
                     "op": "update"
                 }
             }
+        }
         };
 
         const response = await admin.messaging().send(notificationPayload2);
