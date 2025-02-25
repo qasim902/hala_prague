@@ -1103,7 +1103,7 @@ Parse.Cloud.define("updateData", async (request) => {
             }
         };
 
-        const response = await admin.messaging().send(notificationPayload2.message);
+        const response = await admin.messaging().send(notificationPayload2);
         console.log("Notification sent successfully!", response);
 
         return {
