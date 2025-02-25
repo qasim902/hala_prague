@@ -1059,11 +1059,9 @@ Parse.Cloud.define("deleteUserByEmail", async (request) => {
 
 Parse.Cloud.define("updateData", async (request) => {
     try {
-        console.log('here in iehbe');
 
         // Ensure Firebase is initialized only once
         if (!admin.apps.length) {
-            console.log('here in if');
 
             let serviceAccount = require("../hala-prague-firebase-admin.json");
 
@@ -1072,39 +1070,8 @@ Parse.Cloud.define("updateData", async (request) => {
             });
         }
 
-        // const serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
-        //
-        // if (!admin.apps.length) {
-        //     console.log('here in if');
-        //     admin.initializeApp({
-        //         credential: admin.credential.cert(serviceAccount),
-        //     });
-        // }
-        console.log('here in else');
-
-
-        // const notificationPayload = {
-        //     topic: "praguenow",  // Replace with your actual topic name
-        //     notification: {
-        //         title: "New content for you",
-        //         body: "Click to view"
-        //     },
-        //     apns: {
-        //         headers: {
-        //             "apns-priority": "5"
-        //         },
-        //         payload: {
-        //             aps: {
-        //                 "mutable-content": 1,
-        //                 "op": "update"
-        //             }
-        //         }
-        //     }
-        // };
-
-
         const notificationPayload2 = {
-            message:{
+            // message:{
 
 
             topic: "praguenow",  // Replace with your actual topic name
@@ -1135,7 +1102,7 @@ Parse.Cloud.define("updateData", async (request) => {
                     "op": "update"
                 }
             }
-        }
+        // }
         };
 
         const response = await admin.messaging().send(notificationPayload2);
