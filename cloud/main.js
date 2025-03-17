@@ -706,7 +706,7 @@ Parse.Cloud.define("sectionItem", async (request) => {
         sectionItem.set("phone", data.phone);
         sectionItem.set("label", data.label);
         sectionItem.set("image", data.image);
-        if (data.images.length > 0) sectionItem.set("images", data.images);
+        if (data.images && data.images.length > 0) sectionItem.set("images", data.images);
         sectionItem.set("website", data.website);
         sectionItem.set("RichDescription", data.RichDescription);
 
